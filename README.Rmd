@@ -1,0 +1,82 @@
+---
+title: "README"
+author: "Doug Sanders"
+date: "July 25, 2014"
+output: html_document
+---
+
+run_analysis.R and run_analysis_functions.R are both needed to run the script and create the tidy data set.
+run_analysis.R sources in run_analysis_functions.R.
+
+Detailed explanantion of the R code used are found as comments in the run_analysis.R script.
+
+The data used for this project is found here: 
+  urlname <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
+
+This link is also found in run_analysis.R of course.  The README.txt in this dataset describes the data.
+
+run_analysis.R takes this data creates a tidy data set of the desired data (the "desired data' is described in step 2):
+1. Merges the training and the test sets to create one data set.
+2. Extracts only the measurements on the mean and standard deviation for each measurement. 
+3. Uses descriptive activity names to name the activities in the data set.
+4. Appropriately labels the data set with descriptive variable names.
+5. Creates a second, independent tidy data set with the average of each variable for each activity and each subject.
+
+The script does not execute in the same order as the instructions.  Here is a step by step of how the script gets to the tidy data set of 
+the desired data:
+
+1. The needed files are read in and named:
+
+DF_activity_labels <- read.delim(file_info[1,1], sep = "", skipNul = TRUE, header = FALSE)
+DF_features <- read.delim(file_info[2,1], sep = "", skipNul = TRUE, header = FALSE)
+
+subject_test <- read.delim(file_info[16,1], sep = "", skipNul = TRUE, header = FALSE)
+DF_X_test <- read.delim(file_info[17,1], sep = "", skipNul = TRUE, header = FALSE)
+DF_Y_test <- read.delim(file_info[18,1], sep = "", skipNul = TRUE, header = FALSE)
+
+
+subject_train <- read.delim(file_info[30,1], sep = "", skipNul = TRUE, header = FALSE)
+DF_X_train <- read.delim(file_info[31,1], sep = "", skipNul = TRUE, header = FALSE)
+DF_Y_train <- read.delim(file_info[32,1], sep = "", skipNul = TRUE, header = FALSE)
+
+In the following explanation the assigned names in R (which are slightly different than the actual filenames in the zipped archive).  If 
+There is confusion, one can simply type in the file name used to read in the data to see the archived file name.  For example:
+
+file_info <- unzip(destination, list=TRUE) # this gets the filenames from the downloaded archive, the line below assigs a name to the data in R
+DF_X_train <- read.delim(file_info[31,1], sep = "", skipNul = TRUE, header = FALSE)
+# so the file "X_train.txt" becomes the R dataframe DF_X_train.
+
+DF_X_Train and DF_X_test each have 561 columns.  The names for these columns are taken from DF_features (which has 561 observations!).  The lengths of DF_Y_test and DF_Y_train
+correspond to the same lengths as DF_X_test and DF_X_train so they are added as columns to the data frame.  Likewise for subject_test and subject_train.  
+
+The DF_Y_test and DF_Y_train are converted from integer values (1-6) to activity character values ("WALKING", "WALKING UP" etc) using the R data "DF_activity_labels" read in from the archive (2x6). The subject_test and subject_train are subject id's where id's 2,4,9,10,12,13,18,20, and 24 are in the test data set and the remaining are in the train data set.  
+
+DATA_TEST and DATA_TRAIN are thus created where each have 563 columns with the first column being the subject id, the second column being the activity name.
+
+So far, only #3 has been done "Uses descriptive activity names to name the activities in the data set".  Next step 2 is done: "Extracts only the measurements on the mean and standard deviation for each measurement".  this is done using grep on "std" and "mean" where "Freq" is excluded.  the result is 66 variable names 33 which include "mean" in the 
+description and 33 which include "std" in the description.
+
+Thus DATA_TEST and DATA_TRAIN are subsetted to Dtest and Dtrain, each with 66+2 columns (using cbind). They are then "merged" by simple "stackig" using "rbind" in R:
+
+DTrain <- cbind(DATA_TRAIN[c(1,2)],DATA_TRAIN[namescols_std],DATA_TRAIN[namescols_mean]) 
+DTest <- cbind(DATA_TEST[c(1,2)],DATA_TEST[namescols_std],DATA_TEST[namescols_mean]) 
+DMERGE <- rbind(DTrain,DTest)
+
+colnames_tidy <- names(DMERGE)
+
+Now 1-3 are complete so on to # 4, descriptive variable names.  "strings_for_match" below contains pieces of the given column names used in a custom function "make_labels" to create more descriptive column names (pieces shown as DF_strings).  
+
+strings_for_match <- c("tBody", "fBody", "tGravity", "Acc", "Gyro", "Jerk" ,"Mag", "std", "mean", "X", "Y", "Z")
+DF_strings <- c("tB", "fB","tG", "A", "G", "J", "MG", "SD", "ME", "X", "Y", "Z")
+DF_strings <- c("TimeDomainBody", "FrequencyDomainBody","TimeDomainGravity", "Accelleration", "Gyrometer", "Jerk", "Magnitude", "StandardDeviation", "Mean", "Xdir", "Ydir", "Zdir")
+
+"ML" (below) are then the new more descriptive column names.
+
+ML <- make_labels(colnames_tidy, strings_for_match, DF_strings) 
+
+The labels for step #4 are thus created but not yet implemented.  (this is arbitrary really, they could have been added at this point but werent so just stating that they haven't been for those who are follwing the R script in detail)
+
+For #5 "Creates a second, independent tidy data set with the average of each variable for each activity and each subject." This is interpreted to mean this:
+Each subject (1-30) has multiple measurements for each activity (6 activites, WALKING, WALKING UP etc) so we need to get 180 (30x6) quantities from the 10,299 rows of data.
+
+This is done by creating an additional column ("subject_activity") as a combination of the first 2 column names where the subject id and activity are pasted together as character values.  As expected there are 180 unique values of the elements in this column.  A custom function script is created which uses the R function "colMeans" to do 180 colMeans calculations where each colMean calcuation uses a subset of rows with the same "subject_id" over 66 columns.  The output of this custom function is now the tidy data set requested in step 5. "Creates a second, independent tidy data set with the average of each variable for each activity and each subject.", save for a final step to add descriptive variable names (ML).

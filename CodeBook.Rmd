@@ -1,0 +1,128 @@
+---
+title: "CodeBook"
+author: "Doug Sanders"
+date: "July 25, 2014"
+output: html_document
+---
+
+This codebook describes a subset of manipulated data from the “raw” database described below (go to “Feature Selection” to see description of the “raw” data used)  The “raw” data is not really raw at all in the pure sense, but for the purposes of this document it will be referred to as such. A more thorough description of the units and measurements is found further below (“Feature Selection”).  Described here is how this raw data was subsetted and transformed into the Tidy data provided. 
+
+The “subset” includes only the Mean and standard deviation quantities (66 variables of the 561 in the raw data set).  
+
+The “calculation” is simply the mean of multiple measurements of the same subject id and activity for the same variable. 
+
+There are 30 subjects and 6 activities, so the tidy data set provided has 180 rows of averages.  The 6 activities are:
+
+ WALKING
+ WALKING_UPSTAIRS
+ WALKING_DOWNSTAIRS
+ SITTING
+ STANDING
+ LAYING
+
+The 180 Tidy data set row names are a concatenation (pasting) of the subject id (1-30) and the activity (example “1 LAYING”, “2 SITTING”)
+
+These are the column names in the tidy data set (68 columns total since the first two are subject ID and activity).  Each and every quantity in the Tidy data 
+set is a mean of values from the “raw” data set.  In the case where the title below contains the word “mean”, it is a mean of a single transient time history record for one subject doing one activity. So the tidy data mean is thus the mean of multiple means of records of the same subject doing the same activity. 
+
+
+
+[1] "subject_ID"                                                     "Activity"                                                      
+ [3] "TimeDomainBodyAccellerationStandardDeviationXdir"               "TimeDomainBodyAccellerationStandardDeviationYdir"              
+ [5] "TimeDomainBodyAccellerationStandardDeviationZdir"               "TimeDomainGravityAccellerationStandardDeviationXdir"           
+ [7] "TimeDomainGravityAccellerationStandardDeviationYdir"            "TimeDomainGravityAccellerationStandardDeviationZdir"           
+ [9] "TimeDomainBodyAccellerationJerkStandardDeviationXdir"           "TimeDomainBodyAccellerationJerkStandardDeviationYdir"          
+[11] "TimeDomainBodyAccellerationJerkStandardDeviationZdir"           "TimeDomainBodyGyrometerStandardDeviationXdir"                  
+[13] "TimeDomainBodyGyrometerStandardDeviationYdir"                   "TimeDomainBodyGyrometerStandardDeviationZdir"                  
+[15] "TimeDomainBodyGyrometerJerkStandardDeviationXdir"               "TimeDomainBodyGyrometerJerkStandardDeviationYdir"              
+[17] "TimeDomainBodyGyrometerJerkStandardDeviationZdir"               "TimeDomainBodyAccellerationMagnitudeStandardDeviation"         
+[19] "TimeDomainGravityAccellerationMagnitudeStandardDeviation"       "TimeDomainBodyAccellerationJerkMagnitudeStandardDeviation"     
+[21] "TimeDomainBodyGyrometerMagnitudeStandardDeviation"              "TimeDomainBodyGyrometerJerkMagnitudeStandardDeviation"         
+[23] "FrequencyDomainBodyAccellerationStandardDeviationXdir"          "FrequencyDomainBodyAccellerationStandardDeviationYdir"         
+[25] "FrequencyDomainBodyAccellerationStandardDeviationZdir"          "FrequencyDomainBodyAccellerationJerkStandardDeviationXdir"     
+[27] "FrequencyDomainBodyAccellerationJerkStandardDeviationYdir"      "FrequencyDomainBodyAccellerationJerkStandardDeviationZdir"     
+[29] "FrequencyDomainBodyGyrometerStandardDeviationXdir"              "FrequencyDomainBodyGyrometerStandardDeviationYdir"             
+[31] "FrequencyDomainBodyGyrometerStandardDeviationZdir"              "FrequencyDomainBodyAccellerationMagnitudeStandardDeviation"    
+[33] "FrequencyDomainBodyAccellerationJerkMagnitudeStandardDeviation" "FrequencyDomainBodyGyrometerMagnitudeStandardDeviation"        
+[35] "FrequencyDomainBodyGyrometerJerkMagnitudeStandardDeviation"     "TimeDomainBodyAccellerationMeanXdir"                           
+[37] "TimeDomainBodyAccellerationMeanYdir"                            "TimeDomainBodyAccellerationMeanZdir"                           
+[39] "TimeDomainGravityAccellerationMeanXdir"                         "TimeDomainGravityAccellerationMeanYdir"                        
+[41] "TimeDomainGravityAccellerationMeanZdir"                         "TimeDomainBodyAccellerationJerkMeanXdir"                       
+[43] "TimeDomainBodyAccellerationJerkMeanYdir"                        "TimeDomainBodyAccellerationJerkMeanZdir"                       
+[45] "TimeDomainBodyGyrometerMeanXdir"                                "TimeDomainBodyGyrometerMeanYdir"                               
+[47] "TimeDomainBodyGyrometerMeanZdir"                                "TimeDomainBodyGyrometerJerkMeanXdir"                           
+[49] "TimeDomainBodyGyrometerJerkMeanYdir"                            "TimeDomainBodyGyrometerJerkMeanZdir"                           
+[51] "TimeDomainBodyAccellerationMagnitudeMean"                       "TimeDomainGravityAccellerationMagnitudeMean"                   
+[53] "TimeDomainBodyAccellerationJerkMagnitudeMean"                   "TimeDomainBodyGyrometerMagnitudeMean"                          
+[55] "TimeDomainBodyGyrometerJerkMagnitudeMean"                       "FrequencyDomainBodyAccellerationMeanXdir"                      
+[57] "FrequencyDomainBodyAccellerationMeanYdir"                       "FrequencyDomainBodyAccellerationMeanZdir"                      
+[59] "FrequencyDomainBodyAccellerationJerkMeanXdir"                   "FrequencyDomainBodyAccellerationJerkMeanYdir"                  
+[61] "FrequencyDomainBodyAccellerationJerkMeanZdir"                   "FrequencyDomainBodyGyrometerMeanXdir"                          
+[63] "FrequencyDomainBodyGyrometerMeanYdir"                           "FrequencyDomainBodyGyrometerMeanZdir"                          
+[65] "FrequencyDomainBodyAccellerationMagnitudeMean"                  "FrequencyDomainBodyAccellerationJerkMagnitudeMean"             
+[67] "FrequencyDomainBodyGyrometerMagnitudeMean"                      "FrequencyDomainBodyGyrometerJerkMagnitudeMean"                 
+
+
+
+
+
+
+Feature Selection 
+=================
+
+The features selected for this database come from the accelerometer and gyroscope 3-axial raw signals tAcc-XYZ and tGyro-XYZ. These time domain signals (prefix 't' to denote time) were captured at a constant rate of 50 Hz. Then they were filtered using a median filter and a 3rd order low pass Butterworth filter with a corner frequency of 20 Hz to remove noise. Similarly, the acceleration signal was then separated into body and gravity acceleration signals (tBodyAcc-XYZ and tGravityAcc-XYZ) using another low pass Butterworth filter with a corner frequency of 0.3 Hz. 
+
+Subsequently, the body linear acceleration and angular velocity were derived in time to obtain Jerk signals (tBodyAccJerk-XYZ and tBodyGyroJerk-XYZ). Also the magnitude of these three-dimensional signals were calculated using the Euclidean norm (tBodyAccMag, tGravityAccMag, tBodyAccJerkMag, tBodyGyroMag, tBodyGyroJerkMag). 
+
+Finally a Fast Fourier Transform (FFT) was applied to some of these signals producing fBodyAcc-XYZ, fBodyAccJerk-XYZ, fBodyGyro-XYZ, fBodyAccJerkMag, fBodyGyroMag, fBodyGyroJerkMag. (Note the 'f' to indicate frequency domain signals). 
+
+These signals were used to estimate variables of the feature vector for each pattern:  
+'-XYZ' is used to denote 3-axial signals in the X, Y and Z directions.
+
+tBodyAcc-XYZ
+tGravityAcc-XYZ
+tBodyAccJerk-XYZ
+tBodyGyro-XYZ
+tBodyGyroJerk-XYZ
+tBodyAccMag
+tGravityAccMag
+tBodyAccJerkMag
+tBodyGyroMag
+tBodyGyroJerkMag
+fBodyAcc-XYZ
+fBodyAccJerk-XYZ
+fBodyGyro-XYZ
+fBodyAccMag
+fBodyAccJerkMag
+fBodyGyroMag
+fBodyGyroJerkMag
+
+The set of variables that were estimated from these signals are: 
+
+mean(): Mean value
+std(): Standard deviation
+mad(): Median absolute deviation 
+max(): Largest value in array
+min(): Smallest value in array
+sma(): Signal magnitude area
+energy(): Energy measure. Sum of the squares divided by the number of values. 
+iqr(): Interquartile range 
+entropy(): Signal entropy
+arCoeff(): Autorregresion coefficients with Burg order equal to 4
+correlation(): correlation coefficient between two signals
+maxInds(): index of the frequency component with largest magnitude
+meanFreq(): Weighted average of the frequency components to obtain a mean frequency
+skewness(): skewness of the frequency domain signal 
+kurtosis(): kurtosis of the frequency domain signal 
+bandsEnergy(): Energy of a frequency interval within the 64 bins of the FFT of each window.
+angle(): Angle between to vectors.
+
+Additional vectors obtained by averaging the signals in a signal window sample. These are used on the angle() variable:
+
+gravityMean
+tBodyAccMean
+tBodyAccJerkMean
+tBodyGyroMean
+tBodyGyroJerkMean
+
+The complete list of variables of each feature vector is available in 'features.txt'
